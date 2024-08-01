@@ -30,6 +30,7 @@
     "@tiptap/starter-kit": "^2.5.8",
     "@uploadthing/react": "^6.7.2",
     "arctic": "^1.9.2",
+    "argon2": "^0.40.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",

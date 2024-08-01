@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { lucia } from "@/auth";
 import prisma from "@/lib/prisma";
@@ -9,55 +9,66 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { isRedirectError } from "next/dist/client/components/redirect";
 
-export async function signUp (credentials: SignUpValues,): Promise<{error:string}>{
+export async function signUp(credentials: SignUpValues): Promise<{ error?: string }> {
     try {
-        const {username, email, password} = signUpSchema.parse(credentials);
+        console.log("Validating credentials...");
+        const { username, email, password } = signUpSchema.parse(credentials);
 
-        const passwordHash = await hash(password,{
+        console.log("Hashing password...");
+        const passwordHash = await hash(password, {
             memoryCost: 19456,
-            timeCost:2,
-            outputLen:32,
+            timeCost: 2,
+            outputLen: 32,
             parallelism: 2,
         });
 
         const userId = generateIdFromEntropySize(10);
 
+        console.log("Checking for existing username...");
         const existingUsername = await prisma.user.findFirst({
-            where:{
-                username:{
-                    equals:username,
-                    mode:"insensitive",
+            where: {
+                username: {
+                    equals: username,
+                    mode: "insensitive",
                 },
             },
         });
 
-        if(existingUsername){
-            return {error:"Username already exists"};
+        if (existingUsername) {
+            console.log("Username already exists");
+            return { error: "Username already exists" };
         }
 
+        console.log("Checking for existing email...");
         const existingEmail = await prisma.user.findFirst({
-            where:{
-                email:{
-                    equals:email,
-                    mode:"insensitive",
+            where: {
+                email: {
+                    equals: email,
+                    mode: "insensitive",
                 },
             },
         });
 
-        if(existingEmail){
-            return {error:"Email already exists"};
+        if (existingEmail) {
+            console.log("Email already exists");
+            return { error: "Email already exists" };
         }
 
+        console.log("Creating new user...");
         await prisma.user.create({
-            data:<any>{                        //----------------------------------resolve any
-                id:userId,
+            data: {
+                id: userId,
                 username,
                 displayName: username,
                 email,
                 passwordHash,
-                },
+                googleId: crypto.randomUUID(),
+                avatarUrl: "hi", // Provide a placeholder value
+                bio: "bio",
+            },
         });
 
+        console.log("Creating session...");
         const session = await lucia.createSession(userId, {});
         const sessionCookie = lucia.createSessionCookie(session.id);
         cookies().set(
@@ -66,13 +77,12 @@ export async function signUp (credentials: SignUpValues,): Promise<{error:string
             sessionCookie.attributes,
         );
 
-        return redirect("/");
+        console.log("Redirecting to home page...");
+        redirect("/");
     } catch (error) {
         if (isRedirectError(error)) throw error;
 
-        console.error(error);
-        return {error:"Something went wrong. Please try again."};
-
-        // return {error:"Failed to create user"};
+        console.error("Error during sign-up process:", error);
+        return { error: "Something went wrong. Please try again." };
     }
 }
