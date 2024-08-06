@@ -12,7 +12,7 @@ export default function Post({ post }: PostProps) {
     <article className="space-y-3 rounded-2xl bg-card p-5 shadow-sm">
       <div className="flex flex-wrap gap-3">
         <Link href={`/users/${post.user.username}`}>
-          <UserAvatar avatarUrl={post.user.avatarUrl}/>
+          <UserAvatar avatarUrl={post.user.avatarUrl} />
           {/* <UserAvatar /> */}
         </Link>
         <div>
@@ -26,7 +26,7 @@ export default function Post({ post }: PostProps) {
             href={`/posts/${post.id}`}
             className="block text-sm text-muted-foreground hover:underline"
           >
-            {/* {formatRelativeDate(post.createdAt)} */}
+            {formatRelativeDate(post.createdAt)}
           </Link>
         </div>
       </div>
