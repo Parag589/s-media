@@ -4,12 +4,13 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Toast, ToastProvider } from "@/components/ui/toast";
 import { Toaster } from "@/components/ui/toaster";
+import ReactQueryProvider from "./ReactQueryProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    template:"%s | bugbook",
+    template: "%s | bugbook",
     default: "bugbook",
   },
   description: "Social Media Application",
@@ -23,16 +24,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-      <ThemeProvider
+        <ReactQueryProvider>
+          <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
-            <Toaster/>
-          {children}
+            <Toaster />
+            {children}
           </ThemeProvider>
-        </body>
+        </ReactQueryProvider>
+      </body>
     </html>
   );
 }
