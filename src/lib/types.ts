@@ -22,13 +22,6 @@ export function getUserDataSelect(loggedInUserId: string) {
   } satisfies Prisma.UserSelect;
 }
 
-export const userDataSelect = {
-  id: true,
-  username: true,
-  displayName: true,
-  avatarUrl: true,
-} satisfies Prisma.UserSelect;
-
 export function getPostDataInclude(loggedInUserId: string) {
   return {
     user: {
@@ -46,7 +39,7 @@ export interface PostsPage {
   nextCursor: string | null;
 }
 
-export interface FollowerInfo{
-  followers: number,
-  isFollowedByUser: boolean
+export interface FollowerInfo {
+  followers: number;
+  isFollowedByUser: boolean;
 }

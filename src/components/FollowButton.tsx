@@ -29,28 +29,28 @@ export default function FollowButton({
       data.isFollowedByUser
         ? kyInstance.delete(`/api/users/${userId}/followers`)
         : kyInstance.post(`/api/users/${userId}/followers`),
-    // onMutate: async () => {
-    //   await queryClient.cancelQueries({ queryKey });
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey });
 
-    //   const previousState = queryClient.getQueryData<FollowerInfo>(queryKey);
+      const previousState = queryClient.getQueryData<FollowerInfo>(queryKey);
 
-    //   queryClient.setQueryData<FollowerInfo>(queryKey, () => ({
-    //     followers:
-    //       (previousState?.followers || 0) +
-    //       (previousState?.isFollowedByUser ? -1 : 1),
-    //     isFollowedByUser: !previousState?.isFollowedByUser,
-    //   }));
+      queryClient.setQueryData<FollowerInfo>(queryKey, () => ({
+        followers:
+          (previousState?.followers || 0) +
+          (previousState?.isFollowedByUser ? -1 : 1),
+        isFollowedByUser: !previousState?.isFollowedByUser,
+      }));
 
-    //   return { previousState };
-    // },
-    // onError(error, variables, context) {
-    //   queryClient.setQueryData(queryKey, context?.previousState);
-    //   console.error(error);
-    //   toast({
-    //     variant: "destructive",
-    //     description: "Something went wrong. Please try again.",
-    //   });
-    // },
+      return { previousState };
+    },
+    onError(error, variables, context) {
+      queryClient.setQueryData(queryKey, context?.previousState);
+      console.error(error);
+      toast({
+        variant: "destructive",
+        description: "Something went wrong. Please try again.",
+      });
+    },
   });
 
   return (

@@ -7,7 +7,7 @@ export async function GET(
   { params: { userId } }: { params: { userId: string } },
 ) {
   try {
-    const { user: loggedInUser } = await validateRequest();  //renamed the loggendin user 
+    const { user: loggedInUser } = await validateRequest();
 
     if (!loggedInUser) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
@@ -38,7 +38,7 @@ export async function GET(
 
     const data: FollowerInfo = {
       followers: user._count.followers,
-      isFollowedByUser: !!user.followers.length, // !!-> converts its to bollean. in this if lenth is not 0 it will return true otherwise false.
+      isFollowedByUser: !!user.followers.length,
     };
 
     return Response.json(data);
@@ -52,14 +52,14 @@ export async function POST(
   req: Request,
   { params: { userId } }: { params: { userId: string } },
 ) {
-  try {  //creatiing a new follower in db
+  try {
     const { user: loggedInUser } = await validateRequest();
 
     if (!loggedInUser) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    await prisma.follow.upsert({  //(upsert -> combination of update and create ) using upsert because if follower already exist upsert ignore the operation but create throw an error that's why we choose upsert
+    await prisma.follow.upsert({
       where: {
         followerId_followingId: {
           followerId: loggedInUser.id,
@@ -70,7 +70,7 @@ export async function POST(
         followerId: loggedInUser.id,
         followingId: userId,
       },
-      update: {},// keep blank bkz if there is already a connection then do nothing
+      update: {},
     });
 
     return new Response();
@@ -80,7 +80,7 @@ export async function POST(
   }
 }
 
-export async function DELETE( //for unfollow
+export async function DELETE(
   req: Request,
   { params: { userId } }: { params: { userId: string } },
 ) {
@@ -91,7 +91,7 @@ export async function DELETE( //for unfollow
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    await prisma.follow.deleteMany({ // choose deleteMany not DELETE it is acts as like a upsert. means do nothing if there is no relevant data in db
+    await prisma.follow.deleteMany({
       where: {
         followerId: loggedInUser.id,
         followingId: userId,
