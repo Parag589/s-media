@@ -3,7 +3,6 @@
 import { logout } from "@/app/(auth)/actions";
 import { useSession } from "@/app/(main)/SessionProvider";
 import { cn } from "@/lib/utils";
-import { useQueryClient } from "@tanstack/react-query";
 import { Check, LogOutIcon, Monitor, Moon, Sun, UserIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
@@ -20,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import UserAvatar from "./UserAvatar";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface UserButtonProps {
   className?: string;
@@ -30,7 +30,7 @@ export default function UserButton({ className }: UserButtonProps) {
 
   const { theme, setTheme } = useTheme();
 
-  const queryClient = useQueryClient();
+  const QueryClient = useQueryClient();
 
   return (
     <DropdownMenu>
@@ -58,7 +58,7 @@ export default function UserButton({ className }: UserButtonProps) {
               <DropdownMenuItem onClick={() => setTheme("system")}>
                 <Monitor className="mr-2 size-4" />
                 System default
-                {theme === "system" && <Check className="ms-2 size-4" />}
+                {!theme  && <Check className="ms-2 size-4" />}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setTheme("light")}>
                 <Sun className="mr-2 size-4" />
@@ -76,7 +76,7 @@ export default function UserButton({ className }: UserButtonProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
-            queryClient.clear();
+            QueryClient.clear(); //clear the cache on server side while logout so that another user cann't get the post of previos logged in user.   
             logout();
           }}
         >

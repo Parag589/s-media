@@ -1,25 +1,19 @@
-import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
-import { ThemeProvider } from "next-themes";
-import localFont from "next/font/local";
+import { Inter } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "next-themes";
+import { Toast, ToastProvider } from "@/components/ui/toast";
+import { Toaster } from "@/components/ui/toaster";
 import ReactQueryProvider from "./ReactQueryProvider";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
     template: "%s | bugbook",
     default: "bugbook",
   },
-  description: "The social media app for powernerds",
+  description: "Social Media Application",
 };
 
 export default function RootLayout({
@@ -29,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={inter.className}>
         <ReactQueryProvider>
           <ThemeProvider
             attribute="class"
@@ -37,10 +31,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <Toaster />
             {children}
           </ThemeProvider>
         </ReactQueryProvider>
-        <Toaster />
       </body>
     </html>
   );
