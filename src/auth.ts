@@ -3,7 +3,6 @@ import { Lucia, Session, User } from "lucia";
 import { cookies } from "next/headers";
 import { cache } from "react";
 import prisma from "./lib/prisma";
-import img from "./assets/avatar-placeholder.png"
 
 const adapter = new PrismaAdapter(prisma.session, prisma.user);
 
@@ -20,7 +19,6 @@ export const lucia = new Lucia(adapter, {
       username: databaseUserAttributes.username,
       displayName: databaseUserAttributes.displayName,
       avatarUrl: databaseUserAttributes.avatarUrl,
-      // avatarUrl: img,
       googleId: databaseUserAttributes.googleId,
     };
   },
