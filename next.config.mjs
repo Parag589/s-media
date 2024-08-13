@@ -5,7 +5,12 @@ const nextConfig = {
       dynamic: 30,
     },
   },
-  serverExternalPackages: ["@node-rs/argon2"],
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals.push("@node-rs/argon2");
+    }
+    return config;
+  },
   images: {
     remotePatterns: [
       {
