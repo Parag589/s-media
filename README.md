@@ -7,7 +7,7 @@ caching to reduce API calls and optimized performance with cron jobs for databas
 ## Features and technologies:
 
 -   Features and technologies:
--   Next.js 15
+-   Next.js 14
 -   Server actions and server components
 -   TanStack React Query
 -   Optimistic updates
